@@ -1,10 +1,13 @@
 import { Icon } from '@iconify/react'
+import { LEGAL_OPERATOR, type LegalDocId } from '../data/legalData'
 import { SITE_CONFIG } from '../data/portfolioData'
 import { MagneticButton } from './MagneticButton'
 import { SplitHeading } from './SplitHeading'
 
 interface FooterCtaProps {
   onJumpToDialog: () => void
+  onOpenLegalDoc: (doc: LegalDocId) => void
+  onOpenCookieSettings: () => void
 }
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -15,7 +18,11 @@ const MESSENGER_ICONS: Record<string, string> = {
   max: 'solar:chat-round-line-bold',
 }
 
-export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
+export function FooterCta({
+  onJumpToDialog,
+  onOpenLegalDoc,
+  onOpenCookieSettings,
+}: FooterCtaProps) {
   return (
     <footer
       id="contact"
@@ -95,13 +102,58 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-[#F2C094]/10 pt-8 text-xs text-[#736B63] sm:flex-row sm:items-center">
-          <p>
-            © {CURRENT_YEAR} {SITE_CONFIG.authorName}. {SITE_CONFIG.role}.
-          </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#5F5852]">
-            PDF → Кристалл живого диалога
-          </p>
+        <div className="mt-12 space-y-5 border-t border-[#F2C094]/10 pt-8 text-xs text-[#736B63]">
+          <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
+            <p className="text-[#9E958C]">
+              © {CURRENT_YEAR} {SITE_CONFIG.authorName}. {SITE_CONFIG.role}.
+            </p>
+
+            <nav aria-label="Правовые документы" className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <button
+                type="button"
+                onClick={() => onOpenLegalDoc('privacy')}
+                className="transition-colors hover:text-[#F2C094]"
+              >
+                Политика конфиденциальности
+              </button>
+              <button
+                type="button"
+                onClick={() => onOpenLegalDoc('consent')}
+                className="transition-colors hover:text-[#F2C094]"
+              >
+                Согласие на обработку ПДн
+              </button>
+              <button
+                type="button"
+                onClick={() => onOpenLegalDoc('cookies')}
+                className="transition-colors hover:text-[#F2C094]"
+              >
+                Политика cookie
+              </button>
+              <button
+                type="button"
+                onClick={onOpenCookieSettings}
+                className="transition-colors hover:text-[#F2C094]"
+              >
+                Настройки cookie
+              </button>
+            </nav>
+          </div>
+
+          <div className="flex flex-col items-start justify-between gap-2 border-t border-[#F2C094]/8 pt-5 text-[11px] leading-relaxed text-[#67605A] lg:flex-row lg:items-center">
+            <p>
+              {LEGAL_OPERATOR.operatorName} · {LEGAL_OPERATOR.inn} · {LEGAL_OPERATOR.ogrnip} ·{' '}
+              <a
+                href={`mailto:${LEGAL_OPERATOR.email}`}
+                className="underline decoration-[#F2C094]/25 underline-offset-2 transition-colors hover:text-[#D8CFC5]"
+              >
+                {LEGAL_OPERATOR.email}
+              </a>
+            </p>
+            <p>
+              Информация на сайте не является публичной офертой (ст. 437 ГК РФ).
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react'
 import { useEffect, useRef, useState } from 'react'
+import type { LegalDocId } from '../data/legalData'
 import { SITE_CONFIG } from '../data/portfolioData'
 
 interface ChatMessage {
@@ -11,6 +12,7 @@ interface ChatMessage {
 interface HeroAgentWidgetProps {
   externalPromptTrigger?: number
   onDialogPulse?: () => void
+  onOpenLegalDoc?: (doc: LegalDocId) => void
 }
 
 const QUICK_NICHES = [
@@ -40,6 +42,7 @@ const NICHE_IDEAS: Record<string, { title: string; pitch: string }> = {
 export function HeroAgentWidget({
   externalPromptTrigger = 0,
   onDialogPulse,
+  onOpenLegalDoc,
 }: HeroAgentWidgetProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -52,6 +55,8 @@ export function HeroAgentWidget({
   const [selectedNiche, setSelectedNiche] = useState<string>('')
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [hasConsent, setHasConsent] = useState(false)
+  const [consentError, setConsentError] = useState(false)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -85,6 +90,12 @@ export function HeroAgentWidget({
     const trimmed = rawText.trim()
     if (!trimmed || isTyping) return
 
+    if (!hasConsent) {
+      setConsentError(true)
+      return
+    }
+
+    setConsentError(false)
     setMessages((prev) => [
       ...prev,
       { id: `user-${Date.now()}`, role: 'user', text: trimmed },
@@ -280,35 +291,80 @@ export function HeroAgentWidget({
         )}
       </div>
 
-      {/* Input form */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          handleUserSubmit(inputValue)
-        }}
-        className="flex items-center gap-2 border-t border-[#F2C094]/10 bg-[#100E0C]/95 p-3"
-      >
-        <label htmlFor="hero-dialog-input" className="sr-only">
-          Ваш ответ ассистенту
-        </label>
-        <input
-          id="hero-dialog-input"
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Напишите вашу нишу или вопрос..."
-          className="flex-1 rounded-xl border border-[#F2C094]/12 bg-[#171412] px-3.5 py-2.5 text-sm text-[#F5EFE6] placeholder-[#736B63] transition-colors focus:border-[#E07A47] focus:outline-none"
-        />
-        <button
-          type="submit"
-          disabled={!inputValue.trim() || isTyping}
-          aria-label="Отправить сообщение"
-          className="btn-copper inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl disabled:cursor-not-allowed disabled:opacity-35 disabled:shadow-none"
+      {/* Input form + 152-FZ separate personal data consent */}
+      <div className="border-t border-[#F2C094]/10 bg-[#100E0C]/95 p-3">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleUserSubmit(inputValue)
+          }}
+          className="flex items-center gap-2"
         >
-          <Icon icon="solar:plain-bold" className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </form>
+          <label htmlFor="hero-dialog-input" className="sr-only">
+            Ваш ответ ассистенту
+          </label>
+          <input
+            id="hero-dialog-input"
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Напишите вашу нишу или вопрос..."
+            className="flex-1 rounded-xl border border-[#F2C094]/12 bg-[#171412] px-3.5 py-2.5 text-sm text-[#F5EFE6] placeholder-[#736B63] transition-colors focus:border-[#E07A47] focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!inputValue.trim() || isTyping}
+            aria-label="Отправить сообщение"
+            className="btn-copper inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl disabled:cursor-not-allowed disabled:opacity-35 disabled:shadow-none"
+          >
+            <Icon icon="solar:plain-bold" className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </form>
+
+        <div
+          className={`mt-2.5 rounded-xl border px-2.5 py-2 transition-colors ${
+            consentError
+              ? 'border-[#E07A47]/70 bg-[#E07A47]/10'
+              : 'border-transparent bg-transparent'
+          }`}
+        >
+          <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-snug text-[#8E867E]">
+            <input
+              type="checkbox"
+              checked={hasConsent}
+              onChange={(e) => {
+                setHasConsent(e.target.checked)
+                if (e.target.checked) setConsentError(false)
+              }}
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 cursor-pointer rounded border-[#F2C094]/30 bg-[#171412] accent-[#E07A47]"
+            />
+            <span>
+              Я даю{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLegalDoc?.('consent')}
+                className="text-[#D8CFC5] underline decoration-[#E07A47]/50 underline-offset-2 transition-colors hover:text-[#F2C094]"
+              >
+                согласие на обработку персональных данных
+              </button>{' '}
+              и ознакомлен(а) с{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLegalDoc?.('privacy')}
+                className="text-[#D8CFC5] underline decoration-[#E07A47]/50 underline-offset-2 transition-colors hover:text-[#F2C094]"
+              >
+                Политикой конфиденциальности
+              </button>
+            </span>
+          </label>
+          {consentError && (
+            <p className="mt-1.5 pl-5 font-mono text-[10px] text-[#F2C094]">
+              Отметьте галочку согласия (152-ФЗ), чтобы отправить сообщение
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

@@ -6,20 +6,25 @@ import { useEffect, useRef, useState } from 'react'
 import { AboutAndFaqSection } from './components/AboutAndFaqSection'
 import { ComparisonSection } from './components/ComparisonSection'
 import { ConceptsSection } from './components/ConceptsSection'
+import { CookieBanner } from './components/CookieBanner'
 import { FooterCta } from './components/FooterCta'
 import { HeroAgentWidget } from './components/HeroAgentWidget'
+import { LegalModal } from './components/LegalModal'
 import { Navbar } from './components/Navbar'
 import { PdfToCrystalScene } from './components/PdfToCrystalScene'
 import { ProcessSection } from './components/ProcessSection'
 import { SandboxDrawer } from './components/SandboxDrawer'
 import { ScrollProgressHud } from './components/ScrollProgressHud'
 import { SplitHeading } from './components/SplitHeading'
+import type { LegalDocId } from './data/legalData'
 import { SITE_CONFIG, type LeadMagnetConcept } from './data/portfolioData'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function App() {
   const [activeConcept, setActiveConcept] = useState<LeadMagnetConcept | null>(null)
+  const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocId | null>(null)
+  const [cookieSettingsTick, setCookieSettingsTick] = useState(0)
   const [dialogFocusTick, setDialogFocusTick] = useState(0)
   const [scenePulse, setScenePulse] = useState(0)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -164,15 +169,15 @@ export function App() {
     }
   }, [])
 
-  // Pause Lenis while drawer is open
+  // Pause Lenis while drawer or legal modal is open
   useEffect(() => {
     if (!lenisRef.current) return
-    if (activeConcept) {
+    if (activeConcept || activeLegalDoc) {
       lenisRef.current.stop()
     } else {
       lenisRef.current.start()
     }
-  }, [activeConcept])
+  }, [activeConcept, activeLegalDoc])
 
   const scrollToMainDialog = () => {
     const target = document.getElementById('live-dialog-anchor')
@@ -296,6 +301,7 @@ export function App() {
                   <HeroAgentWidget
                     externalPromptTrigger={dialogFocusTick}
                     onDialogPulse={() => setScenePulse((prev) => prev + 1)}
+                    onOpenLegalDoc={(doc) => setActiveLegalDoc(doc)}
                   />
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#F2C094]/12 bg-[#141210]/90 px-4 py-3 backdrop-blur-md sm:hidden">
                     <span className="font-mono text-[11px] text-[#A69D94]">
@@ -326,7 +332,11 @@ export function App() {
           <AboutAndFaqSection />
         </main>
 
-        <FooterCta onJumpToDialog={scrollToMainDialog} />
+        <FooterCta
+          onJumpToDialog={scrollToMainDialog}
+          onOpenLegalDoc={(doc) => setActiveLegalDoc(doc)}
+          onOpenCookieSettings={() => setCookieSettingsTick((prev) => prev + 1)}
+        />
       </div>
 
       <SandboxDrawer
@@ -334,6 +344,17 @@ export function App() {
         concept={activeConcept}
         onClose={() => setActiveConcept(null)}
         onSwitchToMainDialog={handleSwitchFromDrawerToMain}
+      />
+
+      <LegalModal
+        activeDoc={activeLegalDoc}
+        onSelectDoc={(doc) => setActiveLegalDoc(doc)}
+        onClose={() => setActiveLegalDoc(null)}
+      />
+
+      <CookieBanner
+        forceOpenTick={cookieSettingsTick}
+        onOpenLegalDoc={(doc) => setActiveLegalDoc(doc)}
       />
     </div>
   )
