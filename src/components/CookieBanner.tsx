@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { LegalDocId } from '../data/legalData'
 
 export type CookieChoice = 'all' | 'essential'
@@ -7,11 +7,13 @@ export type CookieChoice = 'all' | 'essential'
 const STORAGE_KEY = 'yk_cookie_consent_v1'
 
 interface CookieBannerProps {
-  forceOpenTick?: number
+  isOpen: boolean
+  onDismiss: () => void
   onOpenLegalDoc: (doc: LegalDocId) => void
 }
 
-function readSavedChoice(): CookieChoice | null {
+export function readSavedCookieChoice(): CookieChoice | null {
+  if (typeof window === 'undefined') return null
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
@@ -25,23 +27,14 @@ function readSavedChoice(): CookieChoice | null {
   }
 }
 
-export function CookieBanner({ forceOpenTick = 0, onOpenLegalDoc }: CookieBannerProps) {
-  const [visible, setVisible] = useState(false)
-  const [currentChoice, setCurrentChoice] = useState<CookieChoice | null>(null)
-
-  useEffect(() => {
-    const saved = readSavedChoice()
-    setCurrentChoice(saved)
-    if (!saved) {
-      setVisible(true)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (forceOpenTick > 0) {
-      setVisible(true)
-    }
-  }, [forceOpenTick])
+export function CookieBanner({
+  isOpen,
+  onDismiss,
+  onOpenLegalDoc,
+}: CookieBannerProps) {
+  const [currentChoice, setCurrentChoice] = useState<CookieChoice | null>(() =>
+    readSavedCookieChoice(),
+  )
 
   const handleSaveChoice = (choice: CookieChoice) => {
     try {
@@ -56,10 +49,10 @@ export function CookieBanner({ forceOpenTick = 0, onOpenLegalDoc }: CookieBanner
       // Ignore storage failures in private browsing modes
     }
     setCurrentChoice(choice)
-    setVisible(false)
+    onDismiss()
   }
 
-  if (!visible) return null
+  if (!isOpen) return null
 
   return (
     <aside
@@ -85,7 +78,7 @@ export function CookieBanner({ forceOpenTick = 0, onOpenLegalDoc }: CookieBanner
               {currentChoice && (
                 <button
                   type="button"
-                  onClick={() => setVisible(false)}
+                  onClick={onDismiss}
                   aria-label="Скрыть настройки cookie"
                   className="text-[#8E867E] transition-colors hover:text-[#F5EFE6]"
                 >

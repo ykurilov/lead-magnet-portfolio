@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AboutAndFaqSection } from './components/AboutAndFaqSection'
 import { ComparisonSection } from './components/ComparisonSection'
 import { ConceptsSection } from './components/ConceptsSection'
-import { CookieBanner } from './components/CookieBanner'
+import { CookieBanner, readSavedCookieChoice } from './components/CookieBanner'
 import { FooterCta } from './components/FooterCta'
 import { HeroAgentWidget } from './components/HeroAgentWidget'
 import { LegalModal } from './components/LegalModal'
@@ -24,7 +24,9 @@ gsap.registerPlugin(ScrollTrigger)
 export function App() {
   const [activeConcept, setActiveConcept] = useState<LeadMagnetConcept | null>(null)
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocId | null>(null)
-  const [cookieSettingsTick, setCookieSettingsTick] = useState(0)
+  const [cookieBannerOpen, setCookieBannerOpen] = useState(
+    () => readSavedCookieChoice() === null,
+  )
   const [dialogFocusTick, setDialogFocusTick] = useState(0)
   const [scenePulse, setScenePulse] = useState(0)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -335,7 +337,7 @@ export function App() {
         <FooterCta
           onJumpToDialog={scrollToMainDialog}
           onOpenLegalDoc={(doc) => setActiveLegalDoc(doc)}
-          onOpenCookieSettings={() => setCookieSettingsTick((prev) => prev + 1)}
+          onOpenCookieSettings={() => setCookieBannerOpen(true)}
         />
       </div>
 
@@ -353,7 +355,8 @@ export function App() {
       />
 
       <CookieBanner
-        forceOpenTick={cookieSettingsTick}
+        isOpen={cookieBannerOpen}
+        onDismiss={() => setCookieBannerOpen(false)}
         onOpenLegalDoc={(doc) => setActiveLegalDoc(doc)}
       />
     </div>
