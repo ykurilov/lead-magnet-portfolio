@@ -154,8 +154,8 @@ export function App() {
                   className="mt-4 max-w-xl text-base leading-relaxed text-[#A1A1AA] sm:mt-5 sm:text-lg"
                 >
                   За 15 минут разговора на сайте или в мессенджере ассистент помогает
-                  клиенту решить проблему — и переводит в ваш Telegram, ВК или MAX уже
-                  готовым к покупке.
+                  клиенту решить проблему и переводит в ваш Telegram, ВК или MAX уже
+                  готовым к покупке
                 </p>
 
                 <div
