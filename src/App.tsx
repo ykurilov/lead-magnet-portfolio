@@ -228,6 +228,24 @@ export function App() {
 
               <div className="lg:col-span-6" data-hero-stagger>
                 <HeroAgentWidget externalPromptTrigger={dialogFocusTick} />
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#24242D] bg-[#111115] px-4 py-3 sm:hidden">
+                  <span className="font-mono text-[11px] text-[#A1A1AA]">
+                    Написать в личку:
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {SITE_CONFIG.messengers.map((m) => (
+                      <a
+                        key={m.id}
+                        href={m.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-lg border border-[#24242D] bg-[#09090B] px-2.5 py-1 font-mono text-[11px] text-[#F4F4F5]"
+                      >
+                        {m.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

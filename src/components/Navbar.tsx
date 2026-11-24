@@ -58,7 +58,7 @@ export function Navbar({ onJumpToDialog }: NavbarProps) {
             onClick={onJumpToDialog}
             className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-[#B8FF3C] px-3 py-2 text-xs font-semibold text-[#09090B] transition-transform hover:bg-[#CBFF6B] active:scale-[0.98] sm:gap-2 sm:px-4 sm:text-sm"
           >
-            <span className="sm:hidden">Идея</span>
+            <span className="sm:hidden">Подобрать</span>
             <span className="hidden sm:inline">Придумать идею</span>
             <Icon icon="solar:arrow-right-linear" className="h-4 w-4" aria-hidden="true" />
           </button>
