@@ -38,6 +38,7 @@ export interface LeadMagnetConcept {
 export const SITE_CONFIG = {
   authorName: 'Юрий Курилов',
   role: 'Разработка живых лид-магнитов и ИИ-антилендингов',
+  authorPortrait: '/images/yury-portrait-01-103f7e6d-78f6-4ae9-a041-d01096ae7518.webp',
   // Замените ссылки ниже на ваши актуальные адреса личных сообщений
   messengers: [
     {
@@ -92,7 +93,7 @@ export const LEAD_MAGNET_CONCEPTS: LeadMagnetConcept[] = [
     id: 'edtech-diagnostic',
     badge: 'Онлайн-школы',
     niche: 'Онлайн-школы и курсы',
-    title: 'ИИ-диагност: найди главную дыру в навыке за 10 минут',
+    title: 'ИИ-диагност: найдите главную дыру в навыке за 10 минут',
     replaces: 'Вместо PDF-чек-листа «10 ошибок новичка»',
     format: 'Анти-лендинг',
     duration: '~10 мин',
@@ -323,4 +324,3 @@ export const FAQ_ITEMS = [
       'Лучше всего формат работает там, где клиенту сложно выбрать с порога: онлайн-курсы, консалтинг, сложные услуги, B2B. Проверить вашу нишу можно прямо в диалоге наверху.',
   },
 ]
-

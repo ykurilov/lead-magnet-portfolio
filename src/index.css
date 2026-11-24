@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Unbounded", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Onest", system-ui, sans-serif;
+  --font-editorial: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Onest", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --color-bg: #09090b;
-  --color-surface: #111115;
-  --color-surface-elevated: #17171d;
-  --color-border: #24242d;
-  --color-accent: #b8ff3c;
-  --color-accent-hover: #cbff6b;
-  --color-text: #f4f4f5;
-  --color-muted: #a1a1aa;
+  --color-bg: #0c0b0a;
+  --color-surface: #141210;
+  --color-surface-elevated: #1c1916;
+  --color-border: #2a241f;
+  --color-accent: #e07a47;
+  --color-accent-hover: #f09261;
+  --color-champagne: #f2c094;
+  --color-text: #f5efe6;
+  --color-muted: #a69d94;
+  --color-faint: #736b63;
 }
 
 @layer base {
@@ -21,6 +24,13 @@
     color: var(--color-text);
     font-family: var(--font-sans);
     scroll-behavior: auto;
+    color-scheme: dark;
+  }
+
+  body {
+    overflow-x: clip;
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 
   /* Accessible focus ring */
@@ -30,29 +40,148 @@
     border-radius: 6px;
   }
 
-  /* Custom subtle dark scrollbar */
+  /* Subtle warm-obsidian scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
   }
   ::-webkit-scrollbar-track {
-    background: #09090b;
+    background: #0c0b0a;
   }
   ::-webkit-scrollbar-thumb {
-    background: #272730;
+    background: #2f2823;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f4e;
+    background: #e07a47;
   }
 }
 
-/* Technical grid backdrop without heavy gradients or blobs */
-.bg-tech-grid {
+/* Editorial serif italic highlight for headings */
+.font-editorial-accent {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Subtle architectural grid overlay */
+.bg-atelier-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(to right, rgba(242, 192, 148, 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(242, 192, 148, 0.032) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* Tactile copper CTA button with living sheen */
+.btn-copper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e07a47 0%, #c86233 100%);
+  color: #0c0b0a;
+  box-shadow:
+    0 1px 0 rgba(255, 236, 214, 0.35) inset,
+    0 10px 30px -10px rgba(224, 122, 71, 0.45);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    filter 220ms ease;
+}
+
+.btn-copper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 240, 224, 0.38) 50%,
+    transparent 80%
+  );
+  transform: translateX(-130%);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.btn-copper:hover {
+  filter: brightness(1.07);
+  box-shadow:
+    0 1px 0 rgba(255, 240, 224, 0.45) inset,
+    0 16px 38px -10px rgba(224, 122, 71, 0.62);
+}
+
+.btn-copper:hover::before {
+  transform: translateX(130%);
+}
+
+.btn-copper:active {
+  transform: scale(0.985);
+}
+
+/* Glass obsidian card with subtle copper rim */
+.surface-obsidian {
+  background: linear-gradient(
+    180deg,
+    rgba(24, 21, 18, 0.88) 0%,
+    rgba(17, 15, 13, 0.92) 100%
+  );
+  border: 1px solid rgba(242, 192, 148, 0.12);
+  box-shadow:
+    0 1px 0 rgba(242, 192, 148, 0.06) inset,
+    0 24px 60px -30px rgba(0, 0, 0, 0.85);
+}
+
+/* 3D Tilt card dynamic cursor glow */
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(224, 122, 71, 0.14),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 280ms ease;
+  pointer-events: none;
+}
+
+.tilt-card:hover::after {
+  opacity: 1;
+}
+
+/* Static poster backdrop for reduced-motion or WebGL fallback */
+.static-scene-poster {
+  background:
+    radial-gradient(620px 460px at 22% 24%, rgba(224, 122, 71, 0.14), transparent 68%),
+    radial-gradient(520px 520px at 78% 68%, rgba(242, 192, 148, 0.08), transparent 72%),
+    radial-gradient(900px 600px at 50% 48%, rgba(28, 24, 20, 0.65), #0c0b0a 80%);
+}
+
+/* Smooth accordion disclosure */
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.accordion-content[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.accordion-content > div {
+  overflow: hidden;
 }
 
 /* Respect prefers-reduced-motion */
@@ -64,5 +193,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .tilt-card {
+    transform: none !important;
   }
 }

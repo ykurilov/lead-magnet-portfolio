@@ -10,6 +10,7 @@ interface ChatMessage {
 
 interface HeroAgentWidgetProps {
   externalPromptTrigger?: number
+  onDialogPulse?: () => void
 }
 
 const QUICK_NICHES = [
@@ -36,7 +37,10 @@ const NICHE_IDEAS: Record<string, { title: string; pitch: string }> = {
   },
 }
 
-export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetProps) {
+export function HeroAgentWidget({
+  externalPromptTrigger = 0,
+  onDialogPulse,
+}: HeroAgentWidgetProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'init-1',
@@ -73,6 +77,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
       ])
       setStage(nextStage)
       setIsTyping(false)
+      onDialogPulse?.()
     }, 420)
   }
 
@@ -85,6 +90,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
       { id: `user-${Date.now()}`, role: 'user', text: trimmed },
     ])
     setInputValue('')
+    onDialogPulse?.()
 
     if (stage === 'niche') {
       setSelectedNiche(trimmed)
@@ -128,26 +134,43 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
     ])
   }
 
+  const currentStepNumber = stage === 'niche' ? 1 : 2
+
   return (
     <div
       id="live-dialog-anchor"
-      className="relative flex flex-col overflow-hidden rounded-2xl border border-[#24242D] bg-[#111115] shadow-2xl"
+      className="surface-obsidian relative flex flex-col overflow-hidden rounded-[26px] backdrop-blur-xl"
     >
       {/* EMBED_DIALOG_SCRIPT_PLACEHOLDER: замените этот компонент-заглушку на ваш скрипт живого диалога */}
 
+      {/* Subtle warm top highlight line */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#E07A47]/65 to-transparent"
+      />
+
       {/* Top bar */}
-      <div className="flex items-center justify-between border-b border-[#24242D] bg-[#15151B] px-4 py-3 sm:px-5">
+      <div className="flex items-center justify-between border-b border-[#F2C094]/10 bg-[#171411]/90 px-4 py-3.5 sm:px-5">
         <div className="flex items-center gap-3">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#B8FF3C] opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#B8FF3C]" />
-          </span>
+          <div className="relative h-10 w-10 shrink-0">
+            <img
+              src={SITE_CONFIG.authorPortrait}
+              alt={SITE_CONFIG.authorName}
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full border border-[#E07A47]/45 object-cover object-top"
+            />
+            <span className="absolute right-0 bottom-0 flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#E07A47] opacity-70" />
+              <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-[#171411] bg-[#E07A47]" />
+            </span>
+          </div>
           <div>
-            <p className="text-xs font-semibold text-[#F4F4F5] sm:text-sm">
+            <p className="text-xs font-semibold text-[#F5EFE6] sm:text-sm">
               Генератор идеи лид-магнита
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-[#A1A1AA]">
-              Онлайн-подбор · 2 шага
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#A69D94]">
+              Онлайн-подбор · Шаг {currentStepNumber} из 2
             </p>
           </div>
         </div>
@@ -157,7 +180,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
           onClick={handleReset}
           title="Начать диалог заново"
           aria-label="Начать диалог заново"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#24242D] bg-[#09090B] px-2.5 py-1.5 font-mono text-[11px] text-[#A1A1AA] transition-colors hover:border-[#3F3F4E] hover:text-[#F4F4F5]"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-[#F2C094]/12 bg-[#0F0D0C] px-2.5 py-1.5 font-mono text-[11px] text-[#A69D94] transition-colors hover:border-[#E07A47]/50 hover:text-[#F5EFE6]"
         >
           <Icon icon="solar:restart-linear" className="h-3.5 w-3.5" aria-hidden="true" />
           <span className="hidden sm:inline">Сброс</span>
@@ -167,7 +190,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
       {/* Messages area */}
       <div
         ref={scrollRef}
-        className="flex h-[320px] flex-col gap-3 overflow-y-auto px-4 py-4 sm:h-[360px] sm:px-5"
+        className="flex h-[325px] flex-col gap-3 overflow-y-auto px-4 py-4 sm:h-[365px] sm:px-5"
       >
         {messages.map((msg) => (
           <div
@@ -177,8 +200,8 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
             <div
               className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'rounded-br-sm bg-[#B8FF3C] font-medium text-[#09090B]'
-                  : 'rounded-bl-sm border border-[#24242D] bg-[#18181F] text-[#F4F4F5]'
+                  ? 'rounded-br-sm bg-gradient-to-br from-[#E58350] to-[#CE6838] font-medium text-[#0C0B0A] shadow-[0_8px_24px_-10px_rgba(224,122,71,0.55)]'
+                  : 'rounded-bl-sm border border-[#F2C094]/10 bg-[#1B1714]/95 text-[#F5EFE6]'
               }`}
             >
               {msg.text}
@@ -188,10 +211,10 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
 
         {isTyping && (
           <div className="flex justify-start">
-            <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-[#24242D] bg-[#18181F] px-4 py-3">
-              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C]" />
-              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C] [animation-delay:0.15s]" />
-              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C] [animation-delay:0.3s]" />
+            <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-[#F2C094]/10 bg-[#1B1714] px-4 py-3">
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47]" />
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47] [animation-delay:0.15s]" />
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47] [animation-delay:0.3s]" />
             </div>
           </div>
         )}
@@ -204,7 +227,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
                 key={niche}
                 type="button"
                 onClick={() => handleUserSubmit(niche)}
-                className="rounded-xl border border-[#2D2D38] bg-[#09090B] px-3 py-2 text-left text-xs text-[#F4F4F5] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
+                className="rounded-xl border border-[#F2C094]/15 bg-[#12100E] px-3.5 py-2 text-left text-xs text-[#E8DFD5] transition-all hover:border-[#E07A47]/70 hover:bg-[#1D1815] hover:text-[#F2C094]"
               >
                 {niche}
               </button>
@@ -222,7 +245,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
                 key={option}
                 type="button"
                 onClick={() => handleUserSubmit(option)}
-                className="rounded-xl border border-[#2D2D38] bg-[#09090B] px-3 py-2 text-left text-xs text-[#F4F4F5] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
+                className="rounded-xl border border-[#F2C094]/15 bg-[#12100E] px-3.5 py-2 text-left text-xs text-[#E8DFD5] transition-all hover:border-[#E07A47]/70 hover:bg-[#1D1815] hover:text-[#F2C094]"
               >
                 {option}
               </button>
@@ -231,8 +254,8 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
         )}
 
         {!isTyping && stage === 'done' && (
-          <div className="mt-2 rounded-xl border border-[#B8FF3C]/30 bg-[#B8FF3C]/5 p-3">
-            <p className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-[#B8FF3C]">
+          <div className="mt-2 rounded-2xl border border-[#E07A47]/35 bg-[#E07A47]/8 p-3.5">
+            <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-[#F2C094]">
               Продолжить диалог в мессенджере
             </p>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -242,7 +265,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
                   href={m.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#24242D] bg-[#09090B] px-3 py-2 text-xs font-semibold text-[#F4F4F5] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#F2C094]/15 bg-[#12100E] px-3 py-2 text-xs font-semibold text-[#F5EFE6] transition-all hover:border-[#E07A47] hover:text-[#F2C094]"
                 >
                   <span>{m.label}</span>
                   <Icon
@@ -263,7 +286,7 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
           e.preventDefault()
           handleUserSubmit(inputValue)
         }}
-        className="flex items-center gap-2 border-t border-[#24242D] bg-[#09090B] p-3"
+        className="flex items-center gap-2 border-t border-[#F2C094]/10 bg-[#100E0C]/95 p-3"
       >
         <label htmlFor="hero-dialog-input" className="sr-only">
           Ваш ответ ассистенту
@@ -274,14 +297,14 @@ export function HeroAgentWidget({ externalPromptTrigger = 0 }: HeroAgentWidgetPr
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Напишите свою нишу или вопрос..."
-          className="flex-1 rounded-xl border border-[#24242D] bg-[#111115] px-3.5 py-2.5 text-sm text-[#F4F4F5] placeholder-[#71717A] transition-colors focus:border-[#B8FF3C] focus:outline-none"
+          placeholder="Напишите вашу нишу или вопрос..."
+          className="flex-1 rounded-xl border border-[#F2C094]/12 bg-[#171412] px-3.5 py-2.5 text-sm text-[#F5EFE6] placeholder-[#736B63] transition-colors focus:border-[#E07A47] focus:outline-none"
         />
         <button
           type="submit"
           disabled={!inputValue.trim() || isTyping}
           aria-label="Отправить сообщение"
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#B8FF3C] text-[#09090B] transition-colors hover:bg-[#CBFF6B] disabled:cursor-not-allowed disabled:opacity-40"
+          className="btn-copper inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl disabled:cursor-not-allowed disabled:opacity-35 disabled:shadow-none"
         >
           <Icon icon="solar:plain-bold" className="h-4 w-4" aria-hidden="true" />
         </button>

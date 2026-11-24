@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react'
 import { useEffect, useRef, useState } from 'react'
-import type { LeadMagnetConcept } from '../data/portfolioData'
+import { SITE_CONFIG, type LeadMagnetConcept } from '../data/portfolioData'
 
 interface SandboxDrawerProps {
   concept: LeadMagnetConcept | null
@@ -20,22 +20,23 @@ export function SandboxDrawer({
   onSwitchToMainDialog,
 }: SandboxDrawerProps) {
   const [stepIndex, setStepIndex] = useState(0)
-  const [history, setHistory] = useState<DrawerMessage[]>([])
+  const [history, setHistory] = useState<DrawerMessage[]>(() =>
+    concept
+      ? [
+          {
+            id: `start-${concept.id}`,
+            role: 'agent',
+            text: concept.demoSteps[0]?.agentMessage ?? '',
+          },
+        ]
+      : [],
+  )
   const [isTyping, setIsTyping] = useState(false)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!concept) return
-    setStepIndex(0)
-    setIsTyping(false)
-    setHistory([
-      {
-        id: `start-${concept.id}`,
-        role: 'agent',
-        text: concept.demoSteps[0]?.agentMessage ?? '',
-      },
-    ])
     closeButtonRef.current?.focus()
   }, [concept])
 
@@ -95,28 +96,37 @@ export function SandboxDrawer({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex justify-end bg-[#070605]/75 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-labelledby="drawer-title"
       onClick={onClose}
     >
       <div
-        className="flex h-full w-full max-w-lg flex-col border-l border-[#24242D] bg-[#09090B] shadow-2xl"
+        className="flex h-full w-full max-w-lg flex-col border-l border-[#F2C094]/15 bg-[#0E0C0B] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-[#24242D] bg-[#111115] px-5 py-4">
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-wider text-[#B8FF3C]">
-              Тест-драйв на сайте · Без перехода
-            </span>
-            <h3
-              id="drawer-title"
-              className="mt-1 font-display text-base font-semibold text-[#F4F4F5]"
-            >
-              {concept.title}
-            </h3>
+        <div className="flex items-start justify-between gap-4 border-b border-[#F2C094]/12 bg-[#161310] px-5 py-4">
+          <div className="flex items-start gap-3">
+            <img
+              src={SITE_CONFIG.authorPortrait}
+              alt={SITE_CONFIG.authorName}
+              width={40}
+              height={40}
+              className="mt-0.5 h-10 w-10 shrink-0 rounded-full border border-[#E07A47]/45 object-cover object-top"
+            />
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#E07A47]">
+                Тест-драйв на сайте · Без перехода
+              </span>
+              <h3
+                id="drawer-title"
+                className="mt-1 font-display text-base font-semibold leading-snug text-[#F5EFE6]"
+              >
+                {concept.title}
+              </h3>
+            </div>
           </div>
 
           <button
@@ -124,7 +134,7 @@ export function SandboxDrawer({
             type="button"
             onClick={onClose}
             aria-label="Закрыть стенд"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#24242D] bg-[#09090B] text-[#A1A1AA] transition-colors hover:border-[#B8FF3C] hover:text-[#F4F4F5]"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#F2C094]/15 bg-[#0E0C0B] text-[#A69D94] transition-colors hover:border-[#E07A47] hover:text-[#F5EFE6]"
           >
             <Icon icon="solar:close-square-linear" className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -143,8 +153,8 @@ export function SandboxDrawer({
               <div
                 className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                   msg.role === 'user'
-                    ? 'rounded-br-sm bg-[#B8FF3C] font-medium text-[#09090B]'
-                    : 'rounded-bl-sm border border-[#24242D] bg-[#15151B] text-[#F4F4F5]'
+                    ? 'rounded-br-sm bg-gradient-to-br from-[#E58350] to-[#CE6838] font-medium text-[#0C0B0A]'
+                    : 'rounded-bl-sm border border-[#F2C094]/10 bg-[#1A1613] text-[#F5EFE6]'
                 }`}
               >
                 {msg.text}
@@ -154,10 +164,10 @@ export function SandboxDrawer({
 
           {isTyping && (
             <div className="flex justify-start">
-              <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-[#24242D] bg-[#15151B] px-4 py-3">
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C]" />
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C] [animation-delay:0.15s]" />
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#B8FF3C] [animation-delay:0.3s]" />
+              <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-[#F2C094]/10 bg-[#1A1613] px-4 py-3">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47] [animation-delay:0.15s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#E07A47] [animation-delay:0.3s]" />
               </div>
             </div>
           )}
@@ -169,7 +179,7 @@ export function SandboxDrawer({
                   key={opt.label}
                   type="button"
                   onClick={() => handleChooseOption(opt.reply, opt.nextIndex)}
-                  className="rounded-xl border border-[#2D2D38] bg-[#111115] px-4 py-3 text-left text-sm text-[#F4F4F5] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
+                  className="rounded-xl border border-[#F2C094]/15 bg-[#151210] px-4 py-3 text-left text-sm text-[#F5EFE6] transition-all hover:border-[#E07A47]/70 hover:bg-[#1D1815] hover:text-[#F2C094]"
                 >
                   {opt.label}
                 </button>
@@ -179,28 +189,28 @@ export function SandboxDrawer({
 
           {!isTyping && currentStep?.isFinal && (
             <div className="mt-2 space-y-4">
-              <div className="rounded-2xl border border-[#B8FF3C]/40 bg-[#B8FF3C]/10 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-[#B8FF3C]">
+              <div className="rounded-2xl border border-[#E07A47]/40 bg-[#E07A47]/10 p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#F2C094]">
                   Итог для клиента
                 </p>
-                <p className="mt-1 font-display text-base font-semibold text-[#F4F4F5]">
+                <p className="mt-1.5 font-display text-base font-semibold text-[#F5EFE6]">
                   {currentStep.resultTitle}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-[#E4E4E7]">
+                <p className="mt-2 text-sm leading-relaxed text-[#E8DFD5]">
                   {currentStep.resultSummary}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-[#24242D] bg-[#111115] p-4">
-                <p className="text-xs leading-relaxed text-[#A1A1AA]">
+              <div className="rounded-2xl border border-[#F2C094]/12 bg-[#151210] p-4">
+                <p className="text-xs leading-relaxed text-[#A69D94]">
                   Демонстрация завершена. Этот стенд никуда не уводит — вы остались на сайте.
                   Хотите придумать такой же лид-магнит под ваш бизнес?
                 </p>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                <div className="mt-3.5 flex flex-col gap-2 sm:flex-row">
                   <button
                     type="button"
                     onClick={onSwitchToMainDialog}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#B8FF3C] px-4 py-2.5 text-xs font-semibold text-[#09090B] transition-colors hover:bg-[#CBFF6B]"
+                    className="btn-copper inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold"
                   >
                     <span>Придумать свой в главном чате</span>
                     <Icon icon="solar:arrow-right-linear" className="h-4 w-4" aria-hidden="true" />
@@ -208,7 +218,7 @@ export function SandboxDrawer({
                   <button
                     type="button"
                     onClick={handleRestart}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#24242D] bg-[#09090B] px-3 py-2.5 text-xs font-medium text-[#A1A1AA] transition-colors hover:text-[#F4F4F5]"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#F2C094]/15 bg-[#0E0C0B] px-3.5 py-2.5 text-xs font-medium text-[#A69D94] transition-colors hover:border-[#E07A47]/50 hover:text-[#F5EFE6]"
                   >
                     <Icon icon="solar:restart-linear" className="h-4 w-4" aria-hidden="true" />
                     <span>Ещё раз</span>
