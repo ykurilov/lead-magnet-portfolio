@@ -49,7 +49,16 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
             </div>
 
             <div className="space-y-3 lg:col-span-5">
-              <p className="font-mono text-xs uppercase tracking-wider text-[#A1A1AA]">
+              <div className="rounded-xl border border-[#B8FF3C]/25 bg-[#B8FF3C]/5 p-3.5">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-[#B8FF3C]">
+                  Первый шаг без обязательств
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#E4E4E7]">
+                  Напишите вашу нишу — предложу 2 рабочие идеи живого лид-магнита и
+                  подскажу формат запуска.
+                </p>
+              </div>
+              <p className="pt-1 font-mono text-xs uppercase tracking-wider text-[#A1A1AA]">
                 Написать в личные сообщения:
               </p>
               {SITE_CONFIG.messengers.map((m) => (

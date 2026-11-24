@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { useEffect, useRef, useState } from 'react'
+import { AboutAndFaqSection } from './components/AboutAndFaqSection'
 import { ComparisonSection } from './components/ComparisonSection'
 import { ConceptsSection } from './components/ConceptsSection'
 import { FooterCta } from './components/FooterCta'
@@ -151,24 +152,26 @@ export function App() {
 
                 <h1
                   data-hero-stagger
-                  className="font-display text-3xl font-bold leading-[1.12] tracking-tight text-[#F4F4F5] sm:text-5xl lg:text-[52px]"
+                  className="font-display text-3xl font-bold leading-[1.12] tracking-tight text-[#F4F4F5] sm:text-5xl lg:text-[50px]"
                 >
-                  PDF-файлы больше не читают.{' '}
-                  <span className="text-[#B8FF3C]">С клиентом должен говорить ИИ.</span>
+                  Хватит сливать трафик в PDF.{' '}
+                  <span className="text-[#B8FF3C]">
+                    Приводите тёплых лидов через живой ИИ-диалог.
+                  </span>
                 </h1>
 
                 <p
                   data-hero-stagger
-                  className="mt-5 max-w-xl text-base leading-relaxed text-[#A1A1AA] sm:text-lg"
+                  className="mt-4 max-w-xl text-base leading-relaxed text-[#A1A1AA] sm:mt-5 sm:text-lg"
                 >
-                  Создаю живые лид-магниты и анти-лендинги: за 15 минут диалога
-                  ИИ-ассистент помогает человеку сдвинуться к решению его проблемы и
-                  мягко переводит его в ваш мессенджер.
+                  За 15 минут разговора на сайте или в мессенджере ассистент помогает
+                  клиенту решить проблему — и переводит в ваш Telegram, ВК или MAX уже
+                  готовым к покупке.
                 </p>
 
                 <div
                   data-hero-stagger
-                  className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3"
+                  className="mt-6 hidden grid-cols-1 gap-3 sm:grid sm:grid-cols-3"
                 >
                   <div className="rounded-xl border border-[#24242D] bg-[#111115] p-3.5">
                     <p className="font-mono text-xs text-[#B8FF3C]">10–15 минут</p>
@@ -192,7 +195,7 @@ export function App() {
 
                 <div
                   data-hero-stagger
-                  className="mt-7 flex flex-wrap items-center gap-3"
+                  className="mt-5 hidden flex-wrap items-center gap-3 sm:mt-7 sm:flex"
                 >
                   <a
                     href="#concepts"
@@ -233,6 +236,7 @@ export function App() {
         <ComparisonSection />
         <ConceptsSection onOpenDemo={(concept) => setActiveConcept(concept)} />
         <ProcessSection />
+        <AboutAndFaqSection />
       </main>
 
       <FooterCta onJumpToDialog={scrollToMainDialog} />
