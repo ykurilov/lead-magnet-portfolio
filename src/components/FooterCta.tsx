@@ -21,9 +21,6 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
         <div className="rounded-3xl border border-[#24242D] bg-[#111115] p-8 sm:p-12 lg:p-16">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
-              <p className="mb-3 font-mono text-xs uppercase tracking-widest text-[#B8FF3C]">
-                // Обсудить проект
-              </p>
               <h2
                 data-reveal-heading
                 className="font-display text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-4xl"
@@ -31,9 +28,8 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
                 Хотите такой же живой лид-магнит для своего бизнеса?
               </h2>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-[#A1A1AA]">
-                Можете прямо сейчас вернуться к ИИ-ассистенту наверху и сгенерировать
-                идею, либо написать мне напрямую в удобный мессенджер — разберём вашу
-                задачу без лишней воды.
+                Проверьте идею в чате наверху или напишите мне — подберу 2 рабочих
+                сценария под вашу нишу и подскажу формат запуска.
               </p>
 
               <div className="mt-7">
@@ -49,18 +45,6 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
             </div>
 
             <div className="space-y-3 lg:col-span-5">
-              <div className="rounded-xl border border-[#B8FF3C]/25 bg-[#B8FF3C]/5 p-3.5">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-[#B8FF3C]">
-                  Первый шаг без обязательств
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#E4E4E7]">
-                  Напишите вашу нишу — предложу 2 рабочие идеи живого лид-магнита и
-                  подскажу формат запуска.
-                </p>
-              </div>
-              <p className="pt-1 font-mono text-xs uppercase tracking-wider text-[#A1A1AA]">
-                Написать в личные сообщения:
-              </p>
               {SITE_CONFIG.messengers.map((m) => (
                 <a
                   key={m.id}
@@ -99,7 +83,6 @@ export function FooterCta({ onJumpToDialog }: FooterCtaProps) {
           <p>
             © {new Date().getFullYear()} {SITE_CONFIG.authorName}. {SITE_CONFIG.role}.
           </p>
-          <p className="font-mono">{SITE_CONFIG.cityTag}</p>
         </div>
       </div>
     </footer>

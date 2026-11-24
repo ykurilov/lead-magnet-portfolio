@@ -12,22 +12,13 @@ export function ConceptsSection({ onOpenDemo }: ConceptsSectionProps) {
       className="border-t border-[#24242D] bg-[#0D0D11] py-20 sm:py-28"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-          <div className="max-w-2xl">
-            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-[#B8FF3C]">
-              // Интерактивные концепты
-            </p>
-            <h2
-              data-reveal-heading
-              className="font-display text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-4xl"
-            >
-              Попробуйте, как это чувствуется глазами клиента
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-[#A1A1AA]">
-            Нажмите на любой пример — сбоку откроется стенд с диалогом. Он никуда не
-            уводит с сайта: вы просто тестируете сценарий изнутри.
-          </p>
+        <div className="mb-10 max-w-2xl">
+          <h2
+            data-reveal-heading
+            className="font-display text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-4xl"
+          >
+            Попробуйте сами — глазами клиента
+          </h2>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3" data-reveal-group>
@@ -68,8 +59,6 @@ export function ConceptsSection({ onOpenDemo }: ConceptsSectionProps) {
                     </div>
                   ))}
                 </div>
-
-                <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">{concept.hook}</p>
               </div>
 
               <div className="mt-6 border-t border-[#24242D] pt-4">
@@ -83,7 +72,7 @@ export function ConceptsSection({ onOpenDemo }: ConceptsSectionProps) {
                     className="h-4 w-4"
                     aria-hidden="true"
                   />
-                  <span>Попробовать диалог на сайте</span>
+                  <span>Попробовать диалог</span>
                 </button>
               </div>
             </article>

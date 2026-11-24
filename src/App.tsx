@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -140,16 +139,6 @@ export function App() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
               <div className="lg:col-span-6">
-                <div
-                  data-hero-stagger
-                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#24242D] bg-[#111115] px-3.5 py-1.5"
-                >
-                  <span className="h-2 w-2 rounded-full bg-[#B8FF3C]" />
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-[#D4D4D8]">
-                    Анти-лендинг · Живые лид-магниты
-                  </span>
-                </div>
-
                 <h1
                   data-hero-stagger
                   className="font-display text-3xl font-bold leading-[1.12] tracking-tight text-[#F4F4F5] sm:text-5xl lg:text-[50px]"
@@ -171,58 +160,20 @@ export function App() {
 
                 <div
                   data-hero-stagger
-                  className="mt-6 hidden grid-cols-1 gap-3 sm:grid sm:grid-cols-3"
+                  className="mt-6 hidden flex-wrap items-center gap-2.5 sm:flex"
                 >
-                  <div className="rounded-xl border border-[#24242D] bg-[#111115] p-3.5">
-                    <p className="font-mono text-xs text-[#B8FF3C]">10–15 минут</p>
-                    <p className="mt-1 text-xs text-[#D4D4D8]">
-                      Быстрый приятный результат в диалоге
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-[#24242D] bg-[#111115] p-3.5">
-                    <p className="font-mono text-xs text-[#B8FF3C]">2 формата</p>
-                    <p className="mt-1 text-xs text-[#D4D4D8]">
-                      Анти-лендинг на сайте или сразу в боте
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-[#24242D] bg-[#111115] p-3.5">
-                    <p className="font-mono text-xs text-[#B8FF3C]">Тёплый лид</p>
-                    <p className="mt-1 text-xs text-[#D4D4D8]">
-                      Сам переходит в Telegram, ВК или MAX
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  data-hero-stagger
-                  className="mt-5 hidden flex-wrap items-center gap-3 sm:mt-7 sm:flex"
-                >
-                  <a
-                    href="#concepts"
-                    className="inline-flex items-center gap-2 rounded-xl border border-[#24242D] bg-[#111115] px-4 py-2.5 text-sm font-medium text-[#F4F4F5] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
-                  >
-                    <span>Посмотреть примеры</span>
-                    <Icon
-                      icon="solar:arrow-down-linear"
-                      className="h-4 w-4"
-                      aria-hidden="true"
-                    />
-                  </a>
-
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-[#71717A]">Личка:</span>
-                    {SITE_CONFIG.messengers.map((m) => (
-                      <a
-                        key={m.id}
-                        href={m.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-lg border border-[#24242D] bg-[#111115] px-3 py-1.5 font-mono text-xs text-[#D4D4D8] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
-                      >
-                        {m.label}
-                      </a>
-                    ))}
-                  </div>
+                  <span className="font-mono text-xs text-[#71717A]">Написать напрямую:</span>
+                  {SITE_CONFIG.messengers.map((m) => (
+                    <a
+                      key={m.id}
+                      href={m.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border border-[#24242D] bg-[#111115] px-3.5 py-2 font-mono text-xs text-[#D4D4D8] transition-colors hover:border-[#B8FF3C] hover:text-[#B8FF3C]"
+                    >
+                      {m.label}
+                    </a>
+                  ))}
                 </div>
               </div>
 
