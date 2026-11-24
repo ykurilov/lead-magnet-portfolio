@@ -14,15 +14,23 @@ export interface LegalDocument {
   sections: LegalSection[]
 }
 
-// Заполните актуальные реквизиты оператора персональных данных перед публикацией сайта
+// Реквизиты оператора ПДн подгружаются из .env.local (не хранятся в публичном Git)
 export const LEGAL_OPERATOR = {
-  operatorName: 'Курилов Юрий (ИП / Самозанятый — укажите статус)',
-  inn: 'ИНН: [укажите ваш ИНН]',
-  ogrnip: 'ОГРНИП: [укажите при наличии]',
-  email: 'privacy@kurilov.ru',
-  siteUrl: 'https://kurilov.ru',
+  operatorName: import.meta.env.VITE_LEGAL_OPERATOR_NAME || 'Юрий Курилов',
+  inn: import.meta.env.VITE_LEGAL_INN || '',
+  ogrnip: import.meta.env.VITE_LEGAL_OGRNIP || '',
+  email: import.meta.env.VITE_LEGAL_EMAIL || 'contact@kurilov-portfolio.gildiya7.ru',
+  siteUrl: import.meta.env.VITE_LEGAL_SITE_URL || 'https://kurilov-portfolio.gildiya7.ru',
   updatedAt: '24 ноября 2026 г.',
 }
+
+const operatorDetailsInline = [
+  LEGAL_OPERATOR.inn,
+  LEGAL_OPERATOR.ogrnip,
+  `e-mail: ${LEGAL_OPERATOR.email}`,
+]
+  .filter(Boolean)
+  .join(', ')
 
 export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocument> = {
   privacy: {
@@ -34,7 +42,7 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocument> = {
       {
         heading: '1. Общие положения',
         paragraphs: [
-          `Настоящая Политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки и меры по обеспечению безопасности персональных данных, предпринимаемые оператором: ${LEGAL_OPERATOR.operatorName} (${LEGAL_OPERATOR.inn}${LEGAL_OPERATOR.ogrnip ? `, ${LEGAL_OPERATOR.ogrnip}` : ''}, e-mail: ${LEGAL_OPERATOR.email}).`,
+          `Настоящая Политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки и меры по обеспечению безопасности персональных данных, предпринимаемые оператором: ${LEGAL_OPERATOR.operatorName} (${operatorDetailsInline}).`,
           `Политика применяется ко всей информации, которую Оператор может получить о посетителях веб-сайта ${LEGAL_OPERATOR.siteUrl} (далее — Сайт), включая взаимодействие с интерактивным диалогом на Сайте и переход в мессенджеры.`,
         ],
       },
@@ -85,7 +93,7 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocument> = {
       {
         heading: 'Текст согласия (ст. 9 № 152-ФЗ)',
         paragraphs: [
-          `Проставляя отметку (галочку) в поле согласия и отправляя сообщение через интерактивный диалог на сайте ${LEGAL_OPERATOR.siteUrl}, я свободно, своей волей и в своём интересе даю конкретное, предметное, информированное и сознательное согласие оператору персональных данных — ${LEGAL_OPERATOR.operatorName} (${LEGAL_OPERATOR.inn}, e-mail: ${LEGAL_OPERATOR.email}) — на обработку моих персональных данных.`,
+          `Проставляя отметку (галочку) в поле согласия и отправляя сообщение через интерактивный диалог на сайте ${LEGAL_OPERATOR.siteUrl}, я свободно, своей волей и в своём интересе даю конкретное, предметное, информированное и сознательное согласие оператору персональных данных — ${LEGAL_OPERATOR.operatorName} (${operatorDetailsInline}) — на обработку моих персональных данных.`,
         ],
       },
       {

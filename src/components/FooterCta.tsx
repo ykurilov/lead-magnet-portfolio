@@ -142,7 +142,10 @@ export function FooterCta({
 
           <div className="flex flex-col items-start justify-between gap-2 border-t border-[#F2C094]/8 pt-5 text-[11px] leading-relaxed text-[#67605A] lg:flex-row lg:items-center">
             <p>
-              {LEGAL_OPERATOR.operatorName} · {LEGAL_OPERATOR.inn} · {LEGAL_OPERATOR.ogrnip} ·{' '}
+              {[LEGAL_OPERATOR.operatorName, LEGAL_OPERATOR.inn, LEGAL_OPERATOR.ogrnip]
+                .filter(Boolean)
+                .join(' · ')}{' '}
+              ·{' '}
               <a
                 href={`mailto:${LEGAL_OPERATOR.email}`}
                 className="underline decoration-[#F2C094]/25 underline-offset-2 transition-colors hover:text-[#D8CFC5]"
